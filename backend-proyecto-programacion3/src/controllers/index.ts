@@ -15,4 +15,5 @@ export * from './proyecto-ciudad.controller';
 export * from './solicitud-inmueble-cliente.controller';
 export * from './solicitud-inmueble-inmueble.controller';
 export * from './solicitud-inmueble-pagos.controller';
-
+export * from './usuarios-rol.controller';
+export * from './rol-usuarios.controller';
