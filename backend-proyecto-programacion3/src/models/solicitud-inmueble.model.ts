@@ -1,6 +1,26 @@
-import {Entity, model, property} from '@loopback/repository';
+import {belongsTo, Entity, hasMany, model, property} from '@loopback/repository';
+import {Cliente} from './cliente.model';
+import {Inmueble} from './inmueble.model';
+import {Pagos} from './pagos.model';
 
-@model()
+@model({
+  settings: {
+    foreignKeys: {
+      fkInmuebleId: {
+        name: 'fkInmuebleId',
+        entity: 'Inmueble',
+        entityKey: 'codigo',
+        foreignKey: 'inmuebleId',
+      },
+      fkClienteId: {
+        name: 'fkClienteId',
+        entity: 'Cliente',
+        entityKey: 'id',
+        foreignKey: 'clienteId',
+      }
+    },
+  },
+})
 export class SolicitudInmueble extends Entity {
   @property({
     type: 'number',
@@ -27,6 +47,14 @@ export class SolicitudInmueble extends Entity {
   })
   estado: string;
 
+  @belongsTo(() => Inmueble)
+  inmuebleId: number;
+
+  @hasMany(() => Pagos)
+  pagos: Pagos[];
+
+  @belongsTo(() => Cliente)
+  clienteId: number;
 
   constructor(data?: Partial<SolicitudInmueble>) {
     super(data);
