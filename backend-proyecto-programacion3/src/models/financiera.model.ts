@@ -4,6 +4,13 @@ import {Entity, model, property} from '@loopback/repository';
 export class Financiera extends Entity {
   @property({
     type: 'number',
+    id: true,
+    generated: true,
+  })
+  id?: number;
+
+  @property({
+    type: 'number',
     required: true,
   })
   totalIngresos: number;
