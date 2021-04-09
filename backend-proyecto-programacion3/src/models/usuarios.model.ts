@@ -48,15 +48,15 @@ export class Usuarios extends Entity {
 
   @property({
     type: 'number',
-    required: true,
+    required: false,
   })
-  id_ciudad: number;
+  id_ciudad?: number;
 
   @property({
     type: 'number',
-    required: true,
+    required: false,
   })
-  id_solicitudInmueble: number;
+  id_solicitudInmueble?: number;
 
   @belongsTo(() => Rol)
   rolId: string;

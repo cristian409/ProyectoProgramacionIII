@@ -17,3 +17,6 @@ export * from './solicitud-inmueble-inmueble.controller';
 export * from './solicitud-inmueble-pagos.controller';
 export * from './usuarios-rol.controller';
 export * from './rol-usuarios.controller';
+export * from './usuario.controller';
+export * from './paises.controller';
+export * from './ciudades.controller';
