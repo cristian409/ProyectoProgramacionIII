@@ -1,4 +1,4 @@
-import {belongsTo, Entity, model, property, hasMany} from '@loopback/repository';
+import {belongsTo, Entity, hasMany, model, property} from '@loopback/repository';
 import {Pais} from './pais.model';
 import {Proyecto} from './proyecto.model';
 
@@ -20,7 +20,7 @@ export class Ciudad extends Entity {
     id: true,
     generated: true,
   })
-  codigo?: number;
+  id?: number;
 
   @property({
     type: 'string',
