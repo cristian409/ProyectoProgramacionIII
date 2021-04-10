@@ -42,9 +42,8 @@ export class Usuarios extends Entity {
 
   @property({
     type: 'string',
-    required: true,
   })
-  contraseña: string;
+  contraseña?: string;
 
   @property({
     type: 'number',

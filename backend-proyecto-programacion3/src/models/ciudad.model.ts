@@ -20,7 +20,7 @@ export class Ciudad extends Entity {
     id: true,
     generated: true,
   })
-  id?: number;
+  codigo?: number;
 
   @property({
     type: 'string',

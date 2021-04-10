@@ -4,18 +4,22 @@ import {
   Filter,
   FilterExcludingWhere,
   repository,
-  Where,
+  Where
 } from '@loopback/repository';
 import {
-  post,
-  param,
-  get,
-  getModelSchemaRef,
-  patch,
+  del, get,
+  getModelSchemaRef, param,
+
+
+  patch, post,
+
+
+
+
   put,
-  del,
+
   requestBody,
-  response,
+  response
 } from '@loopback/rest';
 import {Ciudad} from '../models';
 import {CiudadRepository} from '../repositories';
@@ -23,8 +27,8 @@ import {CiudadRepository} from '../repositories';
 export class CiudadesController {
   constructor(
     @repository(CiudadRepository)
-    public ciudadRepository : CiudadRepository,
-  ) {}
+    public ciudadRepository: CiudadRepository,
+  ) { }
 
   @post('/ciudades')
   @response(200, {
@@ -37,12 +41,12 @@ export class CiudadesController {
         'application/json': {
           schema: getModelSchemaRef(Ciudad, {
             title: 'NewCiudad',
-            exclude: ['id'],
+            exclude: ['codigo'],
           }),
         },
       },
     })
-    ciudad: Omit<Ciudad, 'id'>,
+    ciudad: Omit<Ciudad, 'codigo'>,
   ): Promise<Ciudad> {
     return this.ciudadRepository.create(ciudad);
   }

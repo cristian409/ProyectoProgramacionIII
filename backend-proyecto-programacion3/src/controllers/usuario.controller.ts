@@ -1,30 +1,39 @@
+import {service} from '@loopback/core';
 import {
   Count,
   CountSchema,
   Filter,
   FilterExcludingWhere,
   repository,
-  Where,
+  Where
 } from '@loopback/repository';
 import {
-  post,
-  param,
-  get,
-  getModelSchemaRef,
-  patch,
+  del, get,
+  getModelSchemaRef, param,
+
+
+  patch, post,
+
+
+
+
   put,
-  del,
+
   requestBody,
-  response,
+  response
 } from '@loopback/rest';
 import {Usuarios} from '../models';
 import {UsuariosRepository} from '../repositories';
+import {GeneralFnService} from '../services';
+
 
 export class UsuarioController {
   constructor(
     @repository(UsuariosRepository)
-    public usuariosRepository : UsuariosRepository,
-  ) {}
+    public usuariosRepository: UsuariosRepository,
+    @service(GeneralFnService)
+    public fnService: GeneralFnService,
+  ) { }
 
   @post('/usuarios')
   @response(200, {
@@ -37,13 +46,20 @@ export class UsuarioController {
         'application/json': {
           schema: getModelSchemaRef(Usuarios, {
             title: 'NewUsuarios',
-            exclude: ['id'],
+            exclude: ['id', 'contraseña'],
           }),
         },
       },
     })
     usuarios: Omit<Usuarios, 'id'>,
   ): Promise<Usuarios> {
+
+    let claveAleatoria = this.fnService.generarClaveAleatoria();
+    console.log(claveAleatoria);
+    let claveCifrada = this.fnService.cifrarTextos(claveAleatoria);
+    console.log(claveCifrada);
+    usuarios.contraseña = claveCifrada;
+
     return this.usuariosRepository.create(usuarios);
   }
 

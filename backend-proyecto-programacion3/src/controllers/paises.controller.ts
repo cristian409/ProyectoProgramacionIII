@@ -4,18 +4,22 @@ import {
   Filter,
   FilterExcludingWhere,
   repository,
-  Where,
+  Where
 } from '@loopback/repository';
 import {
-  post,
-  param,
-  get,
-  getModelSchemaRef,
-  patch,
+  del, get,
+  getModelSchemaRef, param,
+
+
+  patch, post,
+
+
+
+
   put,
-  del,
+
   requestBody,
-  response,
+  response
 } from '@loopback/rest';
 import {Pais} from '../models';
 import {PaisRepository} from '../repositories';
@@ -23,8 +27,8 @@ import {PaisRepository} from '../repositories';
 export class PaisesController {
   constructor(
     @repository(PaisRepository)
-    public paisRepository : PaisRepository,
-  ) {}
+    public paisRepository: PaisRepository,
+  ) { }
 
   @post('/pais')
   @response(200, {
@@ -37,12 +41,12 @@ export class PaisesController {
         'application/json': {
           schema: getModelSchemaRef(Pais, {
             title: 'NewPais',
-            exclude: ['id'],
+            exclude: ['codigo'],
           }),
         },
       },
     })
-    pais: Omit<Pais, 'id'>,
+    pais: Omit<Pais, 'codigo'>,
   ): Promise<Pais> {
     return this.paisRepository.create(pais);
   }

@@ -8,7 +8,7 @@ export class Pais extends Entity {
     id: true,
     generated: true,
   })
-  id?: number;
+  codigo?: number;
 
   @property({
     type: 'string',
