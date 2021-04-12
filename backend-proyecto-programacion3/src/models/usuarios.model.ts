@@ -35,27 +35,27 @@ export class Usuarios extends Entity {
   email: string;
 
   @property({
-    type: 'string',
-  })
-  clave?: string;
-
-  @property({
     type: 'number',
     required: true,
   })
   telefono: number;
 
   @property({
-    type: 'number',
-    required: true,
+    type: 'string',
   })
-  id_ciudad: number;
+  contraseña?: string;
 
   @property({
     type: 'number',
-    required: true,
+    required: false,
   })
-  id_solicitudInmueble: number;
+  id_ciudad?: number;
+
+  @property({
+    type: 'number',
+    required: false,
+  })
+  id_solicitudInmueble?: number;
 
   @belongsTo(() => Rol)
   rolId: string;
