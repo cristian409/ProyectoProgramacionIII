@@ -22,7 +22,7 @@ export class GeneralFnService {
   //Funcion para el cifrado de textos(contraseñas)
   cifrarTextos(texto: string): string {
     //let textoEnc = cryptoJS.AES.encrypt(texto, llaves.AESKeys).toString();
-    let textoEnc = cryptoJS.MD5(texto);
+    let textoEnc = cryptoJS.MD5(texto).toString();
     return textoEnc;
   }
 }

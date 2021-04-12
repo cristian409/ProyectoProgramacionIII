@@ -22,9 +22,10 @@ import {
   requestBody,
   response
 } from '@loopback/rest';
+import {Keys as llaves} from '../config/keys';
 import {Usuarios} from '../models';
 import {UsuariosRepository} from '../repositories';
-import {GeneralFnService} from '../services';
+import {GeneralFnService, NotificacionService} from '../services';
 
 
 export class UsuarioController {
@@ -33,6 +34,8 @@ export class UsuarioController {
     public usuariosRepository: UsuariosRepository,
     @service(GeneralFnService)
     public fnService: GeneralFnService,
+    @service(NotificacionService)
+    public servicioNotificacion: NotificacionService,
   ) { }
 
   @post('/usuarios')
@@ -59,8 +62,15 @@ export class UsuarioController {
     let claveCifrada = this.fnService.cifrarTextos(claveAleatoria);
     console.log(claveCifrada);
     usuarios.contraseña = claveCifrada;
+    let usuarioNuevo = await this.usuariosRepository.create(usuarios);
 
-    return this.usuariosRepository.create(usuarios);
+    // notificamos al usuario
+    let contenido = `<strong>Buen dia </strong> <br/> A sido registrado satisfactoriamente en el sistema de ventas. <br/>
+                      sus datos de ingreso son: <br/><br/> Usuario: ${usuarios.email} <br/> Contraseña: ${claveAleatoria}<br/><br/>
+                      Recuerde cambiar la contraseña al hacer su primer ingreso. Muchas gracias`;
+    this.servicioNotificacion.enviarEmail(usuarios.email, llaves.asuntoRegistroUsuario, contenido);
+
+    return usuarioNuevo;
   }
 
   @get('/usuarios/count')
