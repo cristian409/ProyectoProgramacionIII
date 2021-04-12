@@ -10,3 +10,4 @@ export * from './rol.model';
 export * from './solicitud-inmueble.model';
 export * from './usuarios.model';
 
+export * from './credenciales.model';

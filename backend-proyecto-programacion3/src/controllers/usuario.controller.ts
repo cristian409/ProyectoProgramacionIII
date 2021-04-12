@@ -1,30 +1,39 @@
+import {service} from '@loopback/core';
 import {
   Count,
   CountSchema,
   Filter,
   FilterExcludingWhere,
   repository,
-  Where,
+  Where
 } from '@loopback/repository';
 import {
-  post,
-  param,
-  get,
-  getModelSchemaRef,
-  patch,
+  del, get,
+  getModelSchemaRef, HttpErrors, param,
+
+
+  patch, post,
+
+
+
+
   put,
-  del,
+
   requestBody,
-  response,
+  response
 } from '@loopback/rest';
 import {Usuarios} from '../models';
+import {Credenciales} from '../models/credenciales.model';
 import {UsuariosRepository} from '../repositories';
+import {JwtService} from '../services';
 
 export class UsuarioController {
   constructor(
     @repository(UsuariosRepository)
-    public usuariosRepository : UsuariosRepository,
-  ) {}
+    public usuariosRepository: UsuariosRepository,
+    @service(JwtService)
+    public servicioJWT: JwtService
+  ) { }
 
   @post('/usuarios')
   @response(200, {
@@ -146,5 +155,31 @@ export class UsuarioController {
   })
   async deleteById(@param.path.string('id') id: string): Promise<void> {
     await this.usuariosRepository.deleteById(id);
+  }
+
+  @post('/identificar')
+  @response(200, {
+    description: 'Identificación de usuarios'
+  })
+  async identificar(
+    @requestBody({
+      content: {
+        'application/json': {
+          schema: getModelSchemaRef(Credenciales),
+        },
+      },
+    }) credenciales: Credenciales
+  ): Promise<object> {
+    const usuario = await this.usuariosRepository.findOne({where: {email: credenciales.correo, clave: credenciales.clave}});
+    if (usuario) {
+      const tk = this.servicioJWT.crearTokenJWT(usuario);
+      usuario.clave = '';
+      return {
+        user: usuario,
+        token: tk
+      };
+    } else {
+      throw new HttpErrors[401]("Usuario o clave incorrecto.")
+    }
   }
 }
