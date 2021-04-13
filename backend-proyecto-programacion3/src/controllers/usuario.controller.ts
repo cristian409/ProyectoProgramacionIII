@@ -1,3 +1,4 @@
+import {authenticate} from '@loopback/authentication';
 import {service} from '@loopback/core';
 import {
   Count,
@@ -33,7 +34,7 @@ import {UsuariosRepository} from '../repositories';
 import {GeneralFnService, JwtService, NotificacionService} from '../services';
 
 
-
+@authenticate('admin')
 export class UsuarioController {
   constructor(
     @repository(UsuariosRepository)
@@ -182,6 +183,7 @@ export class UsuarioController {
     await this.usuariosRepository.deleteById(id);
   }
 
+  @authenticate.skip()
   @post('/identificar')
   @response(200, {
     description: 'Identificación de usuarios'

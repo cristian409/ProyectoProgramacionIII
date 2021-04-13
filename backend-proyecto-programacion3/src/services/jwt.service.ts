@@ -24,4 +24,13 @@ export class JwtService {
     return tk;
   }
 
+  verificarTokenJWT(token: string) {
+    try {
+      const decoded = jwt.verify(token, llaves.jwtkey);
+      return decoded;
+    } catch {
+      return null;
+    }
+  }
+
 }

@@ -10,7 +10,7 @@ export class GeneralFnService {
 
   //Funcion para generar las constraseñas aleatorias de usuarios
   generarClaveAleatoria(): string {
-    let pass = generate({
+    const pass = generate({
       length: 10,
       numbers: true,
       uppercase: true,
@@ -22,7 +22,7 @@ export class GeneralFnService {
   //Funcion para el cifrado de textos(contraseñas)
   cifrarTextos(texto: string): string {
     //let textoEnc = cryptoJS.AES.encrypt(texto, llaves.AESKeys).toString();
-    let textoEnc = cryptoJS.MD5(texto).toString();
+    const textoEnc = cryptoJS.MD5(texto).toString();
     return textoEnc;
   }
 }
