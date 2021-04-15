@@ -1,6 +1,6 @@
-import {belongsTo, Entity, model, property, hasMany} from '@loopback/repository';
-import {Ciudad} from './ciudad.model';
+import {belongsTo, Entity, hasMany, model, property} from '@loopback/repository';
 import {Bloque} from './bloque.model';
+import {Ciudad} from './ciudad.model';
 
 @model({
   settings: {

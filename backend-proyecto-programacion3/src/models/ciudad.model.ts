@@ -5,8 +5,8 @@ import {Proyecto} from './proyecto.model';
 @model({
   settings: {
     foreignKeys: {
-      fkPaisId: {
-        name: 'fkPaisId',
+      fPaisId: {
+        name: 'fPaisId',
         entity: 'Pais',
         entityKey: 'codigo',
         foreignKey: 'paisId',
