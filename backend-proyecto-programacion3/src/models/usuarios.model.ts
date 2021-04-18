@@ -35,10 +35,10 @@ export class Usuarios extends Entity {
   email: string;
 
   @property({
-    type: 'number',
+    type: 'string',
     required: true,
   })
-  telefono: number;
+  telefono: string;
 
   @property({
     type: 'string',

@@ -1,4 +1,3 @@
-import {authenticate} from '@loopback/authentication';
 import {service} from '@loopback/core';
 import {
   Count,
@@ -28,13 +27,13 @@ import {
   response
 } from '@loopback/rest';
 import {Keys as llaves} from '../config/keys';
-import {Usuarios} from '../models';
+import {ResetearClave, Usuarios} from '../models';
 import {Credenciales} from '../models/credenciales.model';
 import {UsuariosRepository} from '../repositories';
 import {GeneralFnService, JwtService, NotificacionService} from '../services';
 
 
-@authenticate('admin')
+
 export class UsuarioController {
   constructor(
     @repository(UsuariosRepository)
@@ -183,7 +182,6 @@ export class UsuarioController {
     await this.usuariosRepository.deleteById(id);
   }
 
-  @authenticate.skip()
   @post('/identificar')
   @response(200, {
     description: 'Identificación de usuarios'
@@ -209,4 +207,47 @@ export class UsuarioController {
       throw new HttpErrors[401]("Usuario o clave incorrecto.")
     }
   }
+  @post('/reset-password')
+  @response(200, {
+    description: 'Usuarios model instance',
+    content: {'application/json': {schema: getModelSchemaRef(ResetearClave)}},
+  })
+  async resetPassword(
+    @requestBody({
+      content: {
+        'application/json': {
+          schema: getModelSchemaRef(ResetearClave),
+        },
+      },
+    })
+    resetearClave: ResetearClave,
+  ): Promise<object> {
+    let usuario = await this.usuariosRepository.findOne({where: {email: resetearClave.correo}})
+    if (!usuario) {
+      throw new HttpErrors[403]("No se encuentra el usuario.")
+    }
+    const claveAleatoria = this.fnService.generarClaveAleatoria();
+    console.log(claveAleatoria);
+    const claveCifrada = this.fnService.cifrarTextos(claveAleatoria);
+    console.log(claveCifrada);
+    usuario.contraseña = claveCifrada;
+    await this.usuariosRepository.update(usuario);
+
+    // notificamos al usuario
+    const contenido = `Buen dia, su contraseña a sido cambiada de manera exitosa
+                      sus nuevos datos de ingreso son: Usuario: ${usuario.email} Contraseña: ${claveAleatoria}
+                      Gracias por usar nuestros servicios`;
+    let enviado = this.servicioNotificacion.EnviarSMS(usuario.telefono, contenido);
+    if (enviado) {
+      return {
+        enviado: "ok"
+      };
+    }
+
+    return {
+      enviado: "ko"
+    };
+  }
+
+
 }
