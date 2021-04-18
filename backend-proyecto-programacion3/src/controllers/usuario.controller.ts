@@ -264,18 +264,15 @@ export class UsuarioController {
       },
     }) cambio: CambioContrasena
   ): Promise<Usuarios> {
-    /**
-     * Lo que podemos hacer:
-     * Notificar al usuario el cambio de contraseña (por email o por sms)
-     * Busqueda en base de datos si hay un correo igual
-     *
-     */
+
     const actual = this.fnService.cifrarTextos(cambio.contrasena_actual);
     const nueva = this.fnService.cifrarTextos(cambio.contrasena_nueva);
     const usuario = await this.usuariosRepository.findOne({where: {contraseña: actual}});
     if (usuario) {
       usuario.contraseña = nueva;
-      await this.usuariosRepository.replaceById(usuario.id, usuario);
+      await this.usuariosRepository.update(usuario);
+      const contenido = `<strong>Buen dia </strong> <br/> Su cambio de clave ha sido exitoso. <br/> Muchas gracias`;
+      this.servicioNotificacion.enviarEmail(usuario.email, llaves.asuntoCambioContrasenaUsuario, contenido);
       return usuario;
     } else {
       throw new HttpErrors[401]("Clave actual erronea, verifique su clave.")
