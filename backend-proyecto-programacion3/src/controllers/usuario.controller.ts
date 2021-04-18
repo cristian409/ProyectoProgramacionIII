@@ -29,7 +29,7 @@ import {
 import {Keys as llaves} from '../config/keys';
 import {CambioContrasena, ResetearClave, Usuarios} from '../models';
 import {Credenciales} from '../models/credenciales.model';
-import {UsuariosRepository} from '../repositories';
+import {RolRepository, UsuariosRepository} from '../repositories';
 import {GeneralFnService, JwtService, NotificacionService} from '../services';
 
 
@@ -38,6 +38,8 @@ export class UsuarioController {
   constructor(
     @repository(UsuariosRepository)
     public usuariosRepository: UsuariosRepository,
+    @repository(RolRepository)
+    public rolesRepository: RolRepository,
     @service(JwtService)
     public servicioJWT: JwtService,
     @service(GeneralFnService)
@@ -71,10 +73,11 @@ export class UsuarioController {
     console.log(claveCifrada);
     usuarios.contraseña = claveCifrada;
     const usuarioNuevo = await this.usuariosRepository.create(usuarios);
+    const rolAsignado = await this.rolesRepository.findOne({where: {id: usuarioNuevo.rolId}})
 
     // notificamos al usuario
     const contenido = `<strong>Buen dia </strong> <br/> A sido registrado satisfactoriamente en el sistema de ventas. <br/>
-                      sus datos de ingreso son: <br/><br/> Usuario: ${usuarios.email} <br/> Contraseña: ${claveAleatoria}<br/><br/>
+                      sus datos de ingreso son: <br/><br/> Usuario: ${usuarios.email} <br/> Contraseña: ${claveAleatoria}<br/> Rol Asignado: ${rolAsignado?.nombre}<br/><br/>
                       Recuerde cambiar la contraseña al hacer su primer ingreso. Muchas gracias`;
     this.servicioNotificacion.enviarEmail(usuarios.email, llaves.asuntoRegistroUsuario, contenido);
 
