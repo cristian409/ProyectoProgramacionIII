@@ -228,17 +228,11 @@ export class UsuarioController {
     if (!usuario) {
       throw new HttpErrors[403]("No se encuentra el usuario.")
     }
-    const claveAleatoria = this.fnService.generarClaveAleatoria();
-    console.log(claveAleatoria);
-    const claveCifrada = this.fnService.cifrarTextos(claveAleatoria);
-    console.log(claveCifrada);
-    usuario.contraseña = claveCifrada;
-    await this.usuariosRepository.update(usuario);
+    const codigoAleatorio = this.fnService.generarCodigoVerificacion();
+    console.log(codigoAleatorio);
 
     // notificamos al usuario
-    const contenido = `Buen dia, su contraseña a sido cambiada de manera exitosa
-                      sus nuevos datos de ingreso son: Usuario: ${usuario.email} Contraseña: ${claveAleatoria}
-                      Gracias por usar nuestros servicios`;
+    const contenido = `Buen dia ${usuario.nombre}, su codigo de verificacion es: ${codigoAleatorio}`;
     const enviado = this.servicioNotificacion.EnviarSMS(usuario.telefono, contenido);
     if (enviado) {
       return {
