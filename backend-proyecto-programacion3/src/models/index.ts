@@ -11,3 +11,4 @@ export * from './solicitud-inmueble.model';
 export * from './usuarios.model';
 
 export * from './credenciales.model';
+export * from './cambio-contrasena.model';

@@ -28,7 +28,7 @@ import {
   response
 } from '@loopback/rest';
 import {Keys as llaves} from '../config/keys';
-import {Usuarios} from '../models';
+import {CambioContrasena, Usuarios} from '../models';
 import {Credenciales} from '../models/credenciales.model';
 import {UsuariosRepository} from '../repositories';
 import {GeneralFnService, JwtService, NotificacionService} from '../services';
@@ -197,7 +197,9 @@ export class UsuarioController {
       },
     }) credenciales: Credenciales
   ): Promise<object> {
-    const usuario = await this.usuariosRepository.findOne({where: {email: credenciales.correo, contraseña: credenciales.clave}});
+    const credenContraseña = this.fnService.cifrarTextos(credenciales.clave);
+    const usuario = await this.usuariosRepository.findOne({where: {email: credenciales.correo, contraseña: credenContraseña}});
+
     if (usuario) {
       const tk = this.servicioJWT.crearTokenJWT(usuario);
       usuario.contraseña = '';
@@ -207,6 +209,39 @@ export class UsuarioController {
       };
     } else {
       throw new HttpErrors[401]("Usuario o clave incorrecto.")
+    }
+  }
+
+
+  @authenticate.skip()
+  @post('/cambioContrasena')
+  @response(200, {
+    description: 'Cambio de contraseña de usuarios'
+  })
+  async cambioContrasena(
+    @requestBody({
+      content: {
+        'application/json': {
+          schema: getModelSchemaRef(CambioContrasena),
+        },
+      },
+    }) cambio: CambioContrasena
+  ): Promise<Usuarios> {
+    /**
+     * Lo que podemos hacer:
+     * Notificar al usuario el cambio de contraseña (por email o por sms)
+     * Busqueda en base de datos si hay un correo igual
+     *
+     */
+    const actual = this.fnService.cifrarTextos(cambio.contrasena_actual);
+    const nueva = this.fnService.cifrarTextos(cambio.contrasena_nueva);
+    const usuario = await this.usuariosRepository.findOne({where: {contraseña: actual}});
+    if (usuario) {
+      usuario.contraseña = nueva;
+      await this.usuariosRepository.replaceById(usuario.id, usuario);
+      return usuario;
+    } else {
+      throw new HttpErrors[401]("Clave actual erronea, verifique su clave.")
     }
   }
 }
