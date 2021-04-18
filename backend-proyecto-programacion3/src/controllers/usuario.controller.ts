@@ -64,21 +64,26 @@ export class UsuarioController {
     })
     usuarios: Omit<Usuarios, 'id'>,
   ): Promise<Usuarios> {
+    const existe = await this.usuariosRepository.findOne({where: {email: usuarios.email}});
+    if (existe) {
+      throw new HttpErrors[401]('El correo ya esta vinculado a otra cuenta')
+    }
+    else {
+      const claveAleatoria = this.fnService.generarClaveAleatoria();
+      console.log(claveAleatoria);
+      const claveCifrada = this.fnService.cifrarTextos(claveAleatoria);
+      console.log(claveCifrada);
+      usuarios.contraseña = claveCifrada;
+      const usuarioNuevo = await this.usuariosRepository.create(usuarios);
 
-    const claveAleatoria = this.fnService.generarClaveAleatoria();
-    console.log(claveAleatoria);
-    const claveCifrada = this.fnService.cifrarTextos(claveAleatoria);
-    console.log(claveCifrada);
-    usuarios.contraseña = claveCifrada;
-    const usuarioNuevo = await this.usuariosRepository.create(usuarios);
-
-    // notificamos al usuario
-    const contenido = `<strong>Buen dia </strong> <br/> A sido registrado satisfactoriamente en el sistema de ventas. <br/>
+      // notificamos al usuario
+      const contenido = `<strong>Buen dia </strong> <br/> A sido registrado satisfactoriamente en el sistema de ventas. <br/>
                       sus datos de ingreso son: <br/><br/> Usuario: ${usuarios.email} <br/> Contraseña: ${claveAleatoria}<br/><br/>
                       Recuerde cambiar la contraseña al hacer su primer ingreso. Muchas gracias`;
-    this.servicioNotificacion.enviarEmail(usuarios.email, llaves.asuntoRegistroUsuario, contenido);
+      this.servicioNotificacion.enviarEmail(usuarios.email, llaves.asuntoRegistroUsuario, contenido);
 
-    return usuarioNuevo;
+      return usuarioNuevo;
+    }
   }
 
   @get('/usuarios/count')
