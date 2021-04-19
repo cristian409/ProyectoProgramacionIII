@@ -66,22 +66,27 @@ export class UsuarioController {
     })
     usuarios: Omit<Usuarios, 'id'>,
   ): Promise<Usuarios> {
+    const existe = await this.usuariosRepository.findOne({where: {email: usuarios.email}});
+    if (existe) {
+      throw new HttpErrors[401]('El correo ya esta vinculado a otra cuenta')
+    }
+    else {
+      const claveAleatoria = this.fnService.generarClaveAleatoria();
+      console.log(claveAleatoria);
+      const claveCifrada = this.fnService.cifrarTextos(claveAleatoria);
+      console.log(claveCifrada);
+      usuarios.contraseña = claveCifrada;
+      const usuarioNuevo = await this.usuariosRepository.create(usuarios);
+      const rolAsignado = await this.rolesRepository.findOne({where: {id: usuarioNuevo.rolId}})
 
-    const claveAleatoria = this.fnService.generarClaveAleatoria();
-    console.log(claveAleatoria);
-    const claveCifrada = this.fnService.cifrarTextos(claveAleatoria);
-    console.log(claveCifrada);
-    usuarios.contraseña = claveCifrada;
-    const usuarioNuevo = await this.usuariosRepository.create(usuarios);
-    const rolAsignado = await this.rolesRepository.findOne({where: {id: usuarioNuevo.rolId}})
-
-    // notificamos al usuario
-    const contenido = `<strong>Buen dia </strong> <br/> A sido registrado satisfactoriamente en el sistema de ventas. <br/>
+      // notificamos al usuario
+      const contenido = `<strong>Buen dia </strong> <br/> A sido registrado satisfactoriamente en el sistema de ventas. <br/>
                       sus datos de ingreso son: <br/><br/> Usuario: ${usuarios.email} <br/> Contraseña: ${claveAleatoria}<br/> Rol Asignado: ${rolAsignado?.nombre}<br/><br/>
                       Recuerde cambiar la contraseña al hacer su primer ingreso. Muchas gracias`;
-    this.servicioNotificacion.enviarEmail(usuarios.email, llaves.asuntoRegistroUsuario, contenido);
+      this.servicioNotificacion.enviarEmail(usuarios.email, llaves.asuntoRegistroUsuario, contenido);
 
-    return usuarioNuevo;
+      return usuarioNuevo;
+    }
   }
 
   @get('/usuarios/count')
@@ -231,17 +236,11 @@ export class UsuarioController {
     if (!usuario) {
       throw new HttpErrors[403]("No se encuentra el usuario.")
     }
-    const claveAleatoria = this.fnService.generarClaveAleatoria();
-    console.log(claveAleatoria);
-    const claveCifrada = this.fnService.cifrarTextos(claveAleatoria);
-    console.log(claveCifrada);
-    usuario.contraseña = claveCifrada;
-    await this.usuariosRepository.update(usuario);
+    const codigoAleatorio = this.fnService.generarCodigoVerificacion();
+    console.log(codigoAleatorio);
 
     // notificamos al usuario
-    const contenido = `Buen dia, su contraseña a sido cambiada de manera exitosa
-                      sus nuevos datos de ingreso son: Usuario: ${usuario.email} Contraseña: ${claveAleatoria}
-                      Gracias por usar nuestros servicios`;
+    const contenido = `Buen dia ${usuario.nombre}, su codigo de verificacion es: ${codigoAleatorio}`;
     const enviado = this.servicioNotificacion.EnviarSMS(usuario.telefono, contenido);
     if (enviado) {
       return {

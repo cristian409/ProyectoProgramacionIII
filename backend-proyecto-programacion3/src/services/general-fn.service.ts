@@ -19,6 +19,16 @@ export class GeneralFnService {
     return pass;
   }
 
+  generarCodigoVerificacion(): string {
+    const codigo = generate({
+      length: 5,
+      numbers: true,
+      uppercase: true,
+      lowercase: true
+    });
+    return codigo;
+  }
+
   //Funcion para el cifrado de textos(contraseñas)
   cifrarTextos(texto: string): string {
     //let textoEnc = cryptoJS.AES.encrypt(texto, llaves.AESKeys).toString();
