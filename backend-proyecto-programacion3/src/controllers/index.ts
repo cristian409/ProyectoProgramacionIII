@@ -21,3 +21,5 @@ export * from './solicitud-inmueble-pagos.controller';
 export * from './usuario.controller';
 export * from './usuarios-rol.controller';
 
+export * from './carga-archivo.controller';
+export * from './descarga-archivo.controller';
