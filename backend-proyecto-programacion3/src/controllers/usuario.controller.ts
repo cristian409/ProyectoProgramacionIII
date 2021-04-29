@@ -1,4 +1,4 @@
-import {inject, service} from '@loopback/core';
+import {service} from '@loopback/core';
 import {
   Count,
   CountSchema,
@@ -24,8 +24,7 @@ import {
   put,
 
   requestBody,
-  response,
-  RestBindings
+  response
 } from '@loopback/rest';
 import {Keys as llaves} from '../config/keys';
 import {CambioContrasena, ResetearClave, Usuarios} from '../models';
@@ -202,20 +201,8 @@ export class UsuarioController {
           schema: getModelSchemaRef(Credenciales),
         },
       },
-    }) credenciales: Credenciales,
-    @inject(RestBindings.Http.RESPONSE) response: Response
+    }) credenciales: Credenciales
   ): Promise<object> {
-    // const googleRecaptcha = new GoogleRecaptcha({secret: process.env.RECAPTCHA_SECRET_KEY})
-    // const recaptchaResponse = request['g-recaptcha-response']
-
-
-    // googleRecaptcha.verify({response: recaptchaResponse}, (error) => {
-    //   if (error) {
-    //     return response.send({isHuman: false})
-    //   }
-
-    //   return response.send({isHuman: true})
-    // })
 
     const credenContraseña = this.fnService.cifrarTextos(credenciales.clave);
     const usuario = await this.usuariosRepository.findOne({where: {email: credenciales.correo, contraseña: credenContraseña}});
