@@ -1,3 +1,4 @@
+import {authenticate} from '@loopback/authentication';
 import {service} from '@loopback/core';
 import {
   Count,
@@ -34,6 +35,7 @@ import {GeneralFnService, JwtService, NotificacionService} from '../services';
 const GoogleRecaptcha = require('google-recaptcha');
 
 
+@authenticate('admin')
 export class UsuarioController {
   constructor(
     @repository(UsuariosRepository)
@@ -190,6 +192,7 @@ export class UsuarioController {
     await this.usuariosRepository.deleteById(id);
   }
 
+  @authenticate.skip()
   @post('/identificar')
   @response(200, {
     description: 'Identificación de usuarios'
@@ -218,6 +221,8 @@ export class UsuarioController {
       throw new HttpErrors[401]("Usuario o clave incorrecto.")
     }
   }
+
+  @authenticate.skip()
   @post('/reset-password')
   @response(200, {
     description: 'Usuarios model instance',
@@ -254,6 +259,7 @@ export class UsuarioController {
     };
   }
 
+  @authenticate.skip()
   @post('/cambioContrasena')
   @response(200, {
     description: 'Cambio de contraseña de usuarios'
