@@ -206,9 +206,7 @@ export class UsuarioController {
       },
     }) credenciales: Credenciales
   ): Promise<object> {
-
-    const credenContraseña = this.fnService.cifrarTextos(credenciales.clave);
-    const usuario = await this.usuariosRepository.findOne({where: {email: credenciales.correo, contraseña: credenContraseña}});
+    const usuario = await this.usuariosRepository.findOne({where: {email: credenciales.correo, contraseña: credenciales.clave}});
 
     if (usuario) {
       const tk = this.servicioJWT.crearTokenJWT(usuario);
