@@ -23,3 +23,6 @@ export * from './usuarios-rol.controller';
 
 export * from './carga-archivo.controller';
 export * from './descarga-archivo.controller';
+export * from './clientes.controller';
+export * from './cliente-ciudad.controller';
+export * from './ciudad-cliente.controller';

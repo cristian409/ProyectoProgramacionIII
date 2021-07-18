@@ -1,6 +1,7 @@
 import {belongsTo, Entity, hasMany, model, property} from '@loopback/repository';
 import {Pais} from './pais.model';
 import {Proyecto} from './proyecto.model';
+import {Cliente} from './cliente.model';
 
 @model({
   settings: {
@@ -33,6 +34,9 @@ export class Ciudad extends Entity {
 
   @hasMany(() => Proyecto)
   proyectos: Proyecto[];
+
+  @hasMany(() => Cliente)
+  clientes: Cliente[];
 
   constructor(data?: Partial<Ciudad>) {
     super(data);

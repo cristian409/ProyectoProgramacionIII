@@ -49,7 +49,7 @@ export class Financiera extends Entity {
     type: 'number',
     required: true,
   })
-  telefonoReferenciaFamiliar: number;
+  telefonoReferenciaFamiliar: string;
 
   @property({
     type: 'string',
