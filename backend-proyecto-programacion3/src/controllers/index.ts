@@ -29,3 +29,4 @@ export * from './usuario.controller';
 export * from './usuarios-rol.controller';
 
 
+export * from './financiera.controller';

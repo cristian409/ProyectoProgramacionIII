@@ -46,7 +46,7 @@ export class Financiera extends Entity {
   nombreReferenciaFamiliar: string;
 
   @property({
-    type: 'number',
+    type: 'string',
     required: true,
   })
   telefonoReferenciaFamiliar: string;
@@ -58,10 +58,10 @@ export class Financiera extends Entity {
   nombreReferenciaPersonal: string;
 
   @property({
-    type: 'number',
+    type: 'string',
     required: true,
   })
-  telefonoReferenciaPersonal: number;
+  telefonoReferenciaPersonal: string;
 
   @belongsTo(() => Cliente)
   clienteId: number;
