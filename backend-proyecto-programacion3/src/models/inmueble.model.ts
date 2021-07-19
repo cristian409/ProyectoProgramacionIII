@@ -23,10 +23,10 @@ export class Inmueble extends Entity {
   codigo?: number;
 
   @property({
-    type: 'number',
+    type: 'string',
     required: true,
   })
-  identificador: number;
+  identificador: string;
 
   @property({
     type: 'number',

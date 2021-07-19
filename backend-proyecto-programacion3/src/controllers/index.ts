@@ -32,3 +32,4 @@ export * from './usuarios-rol.controller';
 
 
 
+export * from './solicitud-inmueble.controller';
