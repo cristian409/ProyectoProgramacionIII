@@ -12,8 +12,10 @@ export * from './cliente-solicitud-inmueble.controller';
 export * from './clientes.controller';
 export * from './descarga-archivo.controller';
 export * from './financiera-cliente.controller';
+export * from './financiera.controller';
 export * from './inmueble-bloque.controller';
 export * from './inmueble-solicitud-inmueble.controller';
+export * from './inmueble.controller';
 export * from './pagos-solicitud-inmueble.controller';
 export * from './pais-ciudad.controller';
 export * from './paises.controller';
@@ -29,4 +31,4 @@ export * from './usuario.controller';
 export * from './usuarios-rol.controller';
 
 
-export * from './financiera.controller';
+
