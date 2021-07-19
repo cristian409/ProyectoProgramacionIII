@@ -25,3 +25,4 @@ export * from './carga-archivo.controller';
 export * from './descarga-archivo.controller';
 export * from './proyecto.controller';
 export * from './bloque.controller';
+export * from './inmueble.controller';
