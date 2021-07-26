@@ -39,7 +39,36 @@ export class CargaArchivoController {
     @requestBody.file() request: Request,
   ): Promise<object | false> {
     const rutaImagenProyecto = path.join(__dirname, llaves.carpetaImagenProyectos);
-    const res = await this.StoreFileToPath(rutaImagenProyecto, llaves.nombreCampoImagenProyecto, request, response, llaves.extensionesPermitidasIMG);
+    const res = await this.StoreFileToPath(rutaImagenProyecto, llaves.nombreCampoImagen, request, response, llaves.extensionesPermitidasIMG);
+    if (res) {
+      const nombre_archivo = response.req?.file.filename;
+      if (nombre_archivo) {
+        return {filename: nombre_archivo};
+      }
+    }
+    return res;
+  }
+
+  @post('/CargarImagenCliente', {
+    responses: {
+      200: {
+        content: {
+          'application/json': {
+            schema: {
+              type: 'object',
+            },
+          },
+        },
+        description: 'Función de carga de la imagen del cliente.',
+      },
+    },
+  })
+  async clientImage(
+    @inject(RestBindings.Http.RESPONSE) response: Response,
+    @requestBody.file() request: Request,
+  ): Promise<object | false> {
+    const rutaImagenCliente = path.join(__dirname, llaves.carpetaImagenClientes);
+    const res = await this.StoreFileToPath(rutaImagenCliente, llaves.nombreCampoImagen, request, response, llaves.extensionesPermitidasIMG);
     if (res) {
       const nombre_archivo = response.req?.file.filename;
       if (nombre_archivo) {

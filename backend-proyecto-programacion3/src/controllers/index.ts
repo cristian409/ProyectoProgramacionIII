@@ -24,12 +24,14 @@ export * from './proyecto-bloque.controller';
 export * from './proyecto-ciudad.controller';
 export * from './proyecto.controller';
 export * from './rol-usuarios.controller';
+export * from './rol.controller';
 export * from './solicitud-inmueble-cliente.controller';
 export * from './solicitud-inmueble-inmueble.controller';
 export * from './solicitud-inmueble-pagos.controller';
+export * from './solicitud-inmueble.controller';
 export * from './usuario.controller';
 export * from './usuarios-rol.controller';
 
 
 
-export * from './solicitud-inmueble.controller';
+

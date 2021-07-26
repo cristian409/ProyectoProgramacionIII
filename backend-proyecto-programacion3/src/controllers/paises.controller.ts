@@ -64,6 +64,7 @@ export class PaisesController {
     return this.paisRepository.count(where);
   }
 
+  @authenticate.skip()
   @get('/pais')
   @response(200, {
     description: 'Array of Pais model instances',
@@ -101,6 +102,7 @@ export class PaisesController {
     return this.paisRepository.updateAll(pais, where);
   }
 
+  @authenticate.skip()
   @get('/pais/{id}')
   @response(200, {
     description: 'Pais model instance',

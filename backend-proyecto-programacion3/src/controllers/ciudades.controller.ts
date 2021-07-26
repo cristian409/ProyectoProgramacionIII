@@ -53,6 +53,7 @@ export class CiudadesController {
     return this.ciudadRepository.create(ciudad);
   }
 
+
   @get('/ciudades/count')
   @response(200, {
     description: 'Ciudad model count',
@@ -64,6 +65,7 @@ export class CiudadesController {
     return this.ciudadRepository.count(where);
   }
 
+  @authenticate.skip()
   @get('/ciudades')
   @response(200, {
     description: 'Array of Ciudad model instances',
@@ -101,6 +103,7 @@ export class CiudadesController {
     return this.ciudadRepository.updateAll(ciudad, where);
   }
 
+  @authenticate.skip()
   @get('/ciudades/{id}')
   @response(200, {
     description: 'Ciudad model instance',

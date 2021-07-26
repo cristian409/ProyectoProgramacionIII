@@ -60,6 +60,7 @@ export class ClientesController {
     return this.clienteRepository.count(where);
   }
 
+  @authenticate.skip()
   @get('/clientes')
   @response(200, {
     description: 'Array of Cliente model instances',
@@ -97,6 +98,7 @@ export class ClientesController {
     return this.clienteRepository.updateAll(cliente, where);
   }
 
+  @authenticate.skip()
   @get('/clientes/{id}')
   @response(200, {
     description: 'Cliente model instance',

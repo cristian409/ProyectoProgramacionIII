@@ -1,3 +1,4 @@
+import {authenticate} from '@loopback/authentication';
 import {
   Count,
   CountSchema,
@@ -14,11 +15,13 @@ import {
 import {Financiera} from '../models';
 import {FinancieraRepository} from '../repositories';
 
+@authenticate('admin', 'vendedor')
 export class FinancieraController {
   constructor(
     @repository(FinancieraRepository)
     public financieraRepository: FinancieraRepository,
   ) { }
+
 
   @post('/financieras')
   @response(200, {
@@ -52,6 +55,7 @@ export class FinancieraController {
     return this.financieraRepository.count(where);
   }
 
+  @authenticate.skip()
   @get('/financieras')
   @response(200, {
     description: 'Array of Financiera model instances',
@@ -89,6 +93,7 @@ export class FinancieraController {
     return this.financieraRepository.updateAll(financiera, where);
   }
 
+  @authenticate.skip()
   @get('/financieras/{id}')
   @response(200, {
     description: 'Financiera model instance',

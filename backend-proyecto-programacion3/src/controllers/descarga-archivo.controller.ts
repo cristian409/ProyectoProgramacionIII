@@ -84,6 +84,10 @@ export class DescargaArchivoController {
       case 1:
         filePath = path.join(__dirname, llaves.carpetaImagenProyectos);
         break;
+      // cliente
+      case 2:
+        filePath = path.join(__dirname, llaves.carpetaImagenClientes);
+        break;
     }
     return filePath;
   }
