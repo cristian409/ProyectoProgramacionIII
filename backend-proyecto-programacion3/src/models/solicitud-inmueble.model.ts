@@ -47,6 +47,12 @@ export class SolicitudInmueble extends Entity {
   })
   estado: string;
 
+  @property({
+    type: 'string',
+    required: true,
+  })
+  aceptarCancelarSolicitud: string;
+
   @belongsTo(() => Inmueble)
   inmuebleId: number;
 

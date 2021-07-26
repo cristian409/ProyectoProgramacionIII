@@ -272,11 +272,11 @@ export class UsuarioController {
     }) cambio: CambioContrasena
   ): Promise<Usuarios> {
 
-    const actual = this.fnService.cifrarTextos(cambio.contrasena_actual);
-    const nueva = this.fnService.cifrarTextos(cambio.contrasena_nueva);
-    const usuario = await this.usuariosRepository.findOne({where: {contraseña: actual}});
+    // const actual = this.fnService.cifrarTextos(cambio.contrasena_actual);
+    // const nueva = this.fnService.cifrarTextos(cambio.contrasena_nueva);
+    const usuario = await this.usuariosRepository.findOne({where: {email: cambio.correo, contraseña: cambio.contrasena_actual}});
     if (usuario) {
-      usuario.contraseña = nueva;
+      usuario.contraseña = cambio.contrasena_nueva;
       await this.usuariosRepository.update(usuario);
       const contenido = `<strong>Buen dia </strong> <br/> Su cambio de clave ha sido exitoso. <br/> Muchas gracias`;
       this.servicioNotificacion.enviarEmail(usuario.email, llaves.asuntoCambioContrasenaUsuario, contenido);

@@ -2,6 +2,13 @@ import {Model, model, property} from '@loopback/repository';
 
 @model()
 export class CambioContrasena extends Model {
+
+  @property({
+    type: 'string',
+    required: true,
+  })
+  correo: string;
+
   @property({
     type: 'string',
     required: true,
