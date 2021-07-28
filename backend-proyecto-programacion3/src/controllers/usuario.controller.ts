@@ -102,6 +102,7 @@ export class UsuarioController {
     return this.usuariosRepository.count(where);
   }
 
+  @authenticate.skip()
   @get('/usuarios')
   @response(200, {
     description: 'Array of Usuarios model instances',
@@ -119,6 +120,7 @@ export class UsuarioController {
   ): Promise<Usuarios[]> {
     return this.usuariosRepository.find(filter);
   }
+
 
   @patch('/usuarios')
   @response(200, {
@@ -235,26 +237,22 @@ export class UsuarioController {
       },
     })
     resetearClave: ResetearClave,
-  ): Promise<object> {
+  ): Promise<void> {
     const usuario = await this.usuariosRepository.findOne({where: {email: resetearClave.correo}})
     if (!usuario) {
       throw new HttpErrors[403]("No se encuentra el usuario.")
     }
-    const codigoAleatorio = this.fnService.generarCodigoVerificacion();
+    const codigoAleatorio = this.fnService.generarClaveAleatoria();
+
+    const claveCifrada = this.fnService.cifrarTextos(codigoAleatorio);
+    usuario.contraseña = claveCifrada;
+    await this.usuariosRepository.update(usuario);
+
     console.log(codigoAleatorio);
 
     // notificamos al usuario
-    const contenido = `Buen dia ${usuario.nombre}, su codigo de verificacion es: ${codigoAleatorio}`;
-    const enviado = this.servicioNotificacion.EnviarSMS(usuario.telefono, contenido);
-    if (enviado) {
-      return {
-        enviado: "ok"
-      };
-    }
-
-    return {
-      enviado: "ko"
-    };
+    const contenido = `Buen dia ${usuario.nombre}, su nueva clave es: ${codigoAleatorio}`;
+    const enviado = this.servicioNotificacion.enviarEmail(usuario.email, llaves.asuntoReseteoContraseña, contenido);
   }
 
   @authenticate.skip()
